@@ -34,7 +34,7 @@ def rain_status(sum_rain):
         print('Excessive rainfall')
 
 
-def main():
+def main(with_plots):
     # read data and skip spaces
     data = pd.read_csv('data/weather_data.csv', skipinitialspace=True)
     # transform our data to a dataframe
@@ -58,14 +58,16 @@ def main():
     # make a pie with the counts percentages of all the days of the year
     plt.title('Percentage of wind direction throughout the year')
     plt.pie(counts, labels=direction, shadow=False, autopct='%1.0f%%')
+    plt.axis('equal')
 
-    # plt.savefig('pie_wind_direction.png')
-    # plt.show()
+    if with_plots:
+        plt.savefig('plots/pie_wind_direction.png')
+        plt.show()
 
     # Group by high Temp and max and get the time of the 4 highest temperatures
-    highestTemps = df.groupby('HIGH').max()['TIME'].tail(4)
+    highest_temps = df.groupby('HIGH').max()['TIME'].tail(4)
     print('> The 4 of the highest temperature are: ')
-    print(highestTemps)
+    print(highest_temps)
 
     print('> Most times the wind was: ' + str(df['DIR'].value_counts()[:1]))
     print('> Max wind speed caused: ' + str(df.groupby('WINDHIGH').max()['W_SPEED'].tail(1)))
@@ -77,8 +79,9 @@ def main():
     plt.title('Average Rain per month')
     plt.tight_layout()
 
-    # plt.show()
-    # plt.savefig('avg_rain_monthly.png')
+    if with_plots:
+        plt.savefig('plots/avg_rain_monthly.png')
+        plt.show()
 
     # Predict the temperature for 25 December of the next year
 
@@ -135,9 +138,10 @@ def main():
     for ax in axs.flat:
         ax.label_outer()
 
-    fig.savefig('temp_per_season', bbox_inches='tight')
     plt.suptitle('Seasonal Temperatures')
-    # plt.show()
+    if with_plots:
+        fig.savefig('plots/temp_per_season.png', bbox_inches='tight')
+        plt.show()
 
     # Get rain status
     print('> Rain status: ')
@@ -145,4 +149,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # set with_plots=True to see the generated plots
+    main(with_plots=True)
